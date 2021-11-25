@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpuup-pod1
+  labels:
+    app: my-name1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-name1
+  template:
+    metadata:
+      labels:
+        app: my-name1
+    spec:
+      containers:
+        - name: cpu-container1
+          image: nogisora/pod1-image:latest
+          resources:
+            requests:
+              cpu: "500m"
+            limits:
+              cpu: "500m"
+          ports:
+            - containerPort: 3100
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cpuup-service1
+  labels:
+    app: my-name1
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 3100
+      targetPort: 3100
+      nodePort: 31000
+  selector:
+    app: my-name1
